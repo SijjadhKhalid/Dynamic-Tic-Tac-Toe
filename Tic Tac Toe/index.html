@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<title>Tic Tac Toe</title>
+	<link href= "styles.css" rel="stylesheet" type="text/css"/>
+	
+	<script>
+	
+	var noVictory = true;
+	var xDimension;
+	var yDimension;
+	
+	var dimensionFinished = false;
+	while (!dimensionFinished){
+		xDimension = prompt("Enter the number of Rows");
+		inputValidation(xDimension);
+	}
+	
+	var dimensionFinished = false;
+	while (!dimensionFinished){
+		yDimension = prompt("Enter the number of columns");
+		inputValidation(yDimension);
+	}
+	
+	var numRow = parseInt(xDimension);
+	var numCol = parseInt(yDimension);
+	var numTotalSpaces = numRow * numCol;
+	
+	function inputValidation(dimension){
+		if ((dimension > 2) && (dimension <= 20)){
+			dimensionFinished = true;
+		}
+		else if (dimension > 20) {
+			alert("The inputted number is too big. Max size is 20!")
+		}
+		else{
+			alert("Please enter a positive integer greater than 2")
+		}
+	}
+	
+	var row = numRow;
+	var col = numCol;
+	
+	$(document).ready(function(){
+        createButtons(row, col);
+     });
+	
+	
+	function createButtons(row, col){
+	var counter = 1;
+	var element = $("#buttonArea");
+	//The first for loop will iterate the rows
+		for (countR = 1; countR <= row; countR++){
+		//The next for loop will iterate the number of columns
+			for (countC = 1; countC <= col; countC++){
+				var newButton = document.createElement("button");
+				newButton.setAttribute("id", "btn"+counter);
+				$(newButton).attr({id: "btn" + counter, type: "button", onclick: "selected(this)"});
+				newButton.setAttribute("class", "grid-space");
+				$(element).append(newButton);
+				counter++;
+			}
+			var breakLine = document.createElement("br");
+			$(element).append(breakLine);
+		}
+	}
+	
+	
+
+	
+	function selected (butObj){
+		butObj.innerHTML = "X";
+		butObj.disabled = true;
+
+		checkWinCondition("X", row, col);
+		
+		if(noVictory == true){
+			computersTurn();
+			checkWinCondition("O", row, col);
+		}
+		if (noVictory == true){
+			drawCheck();
+		}
+	}
+	
+	function checkWinCondition(player, row, col){
+		if(noVictory == true){
+			checkWinHorizontal(player, row, col);
+			
+		}
+		if(noVictory == true){
+			checkWinVertical(player, row, col);
+		}
+		/*if(noVictory == true){
+			checkWinDiagnolBackSlash(player, row, col);
+		}
+		if(noVictory == true){
+			checkWinDiagnolForwardSlash(player, row, col);
+		}*/  
+	}
+	
+	function drawCheck(){
+		var btns = document.getElementsByTagName("button");
+		for(btn in btns){
+			if(btns[btn].disabled == false){
+				return;}	
+		}
+		alert("Draw, Game over");
+		resetButtons();
+	}
+	
+	function computersTurn(){
+		for (var i = 1; i <= numTotalSpaces; i++){
+			randInt = Math.floor(Math.random() * numTotalSpaces) + 1;
+			randButObj = document.getElementById("btn"+randInt);
+			if(randButObj.disabled == false){
+				randButObj.innerHTML = "O";
+				randButObj.disabled = true;
+				break;	}
+		}
+	}
+
+	
+	function resetButtons(){
+	var buttons = $("button");
+	var counter = 0;
+	for(var i = 0; i < numTotalSpaces; i++){
+		buttons[i].innerHTML = "";
+		buttons[i].disabled = false;
+		$(buttons[i]).removeClass("winclass");
+		noVictory = true;
+		}
+		
+	for (countR = 0; countR <= row; countR++){
+		//Check Columns
+			for (countC = 0; countC <= col; countC++){
+					buttons[counter].setAttribute("class", "grid-space");
+					counter++;
+			}
+		}	
+	}
+	
+	
+	function checkWinHorizontal(player, row, col){
+	var counter = 0;
+	var btn = $("button");
+	//Check for the rows	
+		for (countR = 0; countR < row; countR++){
+		//Check Columns
+			for (countC = 0; countC < col; countC++){
+				if (player != btn[counter].innerHTML){
+				counter += col-countC; 
+				break;
+				}
+				else if (countC+1 == col){
+					for (countW = 0; countW < col; countW++){
+						$(btn[counter-countW]).attr("class","winclass");
+					}
+					alert(player + " wins");
+					noVictory = false;
+					
+				}
+				else{
+				counter++;}
+			}
+		}		
+	}	
+	
+	function checkWinVertical(player, row, col){
+	var counter = 0;
+	var button = $("button");
+	//Check for the Cols	
+		for (countCol = 0; countCol < row; countCol++){
+		//Check Rows
+			for (countRow = countCol; countRow < numTotalSpaces; countRow += col){
+				if (player != button[countRow].innerHTML){ 
+				break;
+				}
+				else if (counter == (row - 1)){
+					for (countRow = countCol; countRow < numTotalSpaces; countRow += col){
+						$(button[countRow]).attr("class","winclass");
+					}
+					alert(player + " wins");
+					noVictory = false;
+					
+				}
+				else{
+				counter++;}
+			}
+		}		
+	}
+	
+	function checkWinDiagnolBackSlash(player, row, col){
+	var counter = 0;
+	var btn = $("button");
+	//Check for the rows	
+		for (countR = 0; countR < row; countR += (col+1)){
+		//Check Columns
+			for (countC = 0; countC < col; countC++){
+				if (player != btn[counter].innerHTML  ){
+				counter += col-countC; 
+				break;
+				}
+				else if (countC+1 == col){
+					for (countW = 0; countW < col; countW++){
+						$(button[counter-countW]).attr("class","winclass");
+					}
+					alert(player + " wins");
+					noVictory = false;
+					
+				}
+				else{
+				counter++;}
+			}
+		}		
+	}
+	
+	function checkWinDiagnolForwardSlash(player, row, col){
+	var counter = 0;
+	var btn = $("button");
+	//Check for the rows	
+		for (countR = 0; countR < row; countR++){
+		//Check Columns
+			for (countC = 0; countC < col; countC++){
+				if (player != btn[counter].innerHTML){
+				counter += col-countC; 
+				break;
+				}
+				else if (countC+1 == col){
+					for (countW = 0; countW < col; countW++){
+						$(button[counter-countW]).attr("class","winclass");
+					}
+					alert(player + " wins");
+					noVictory = false;
+					
+				}
+				else{
+				counter++;}
+			}
+		}		
+	}
+	
+	</script>
+	
+	</head>
+
+	<body>
+	
+		<span class="page-title">Tic Tac Toe</span><br>
+		
+			
+		
+		<div class = "reset" ">
+			<input  type="button" class="reset" id="btnNewGame" onClick="resetButtons()" value="Reset"></input>
+		</div>
+			
+	
+		<div class = "game-board">
+			<div class = "board-grid" id = "buttonArea" ></div>
+		</div>
+	
+	</body>
+
+</html>

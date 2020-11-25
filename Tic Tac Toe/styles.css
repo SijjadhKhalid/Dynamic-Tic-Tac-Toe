@@ -1,0 +1,58 @@
+body{
+	font-family: "verdana", Sana-serif;
+}
+
+.page-title{
+	font-size: 50px;
+	text-align: center;
+	display: block;
+	margin-left:auto;
+	margin-right: auto;
+	background-color:green;
+	font-family: sans-serif;
+	color: black;
+	border: solid 3px black;
+}
+
+.game-board{
+	background: black;
+	display:flex;
+	justify-content:center;
+	margin-left:auto;
+	margin-right: auto;
+	border: solid 3px green;
+}
+
+
+
+.grid-space{
+	margin:left;
+	font-size: 50px;
+	height:100px;
+	width: 100px;
+	background: green;
+	
+}
+
+.grid-space:hover{
+	background-color: coral;
+}
+
+
+
+.reset{
+	position: relative;
+	justify-content:center;
+	margin-left:auto;
+	margin-right: auto;
+	height: 100px;
+	width: 200px;
+	
+}
+
+.winclass{
+	background-color: red;
+	font-size: 50px;
+	height:100px;
+	width: 100px;
+}
